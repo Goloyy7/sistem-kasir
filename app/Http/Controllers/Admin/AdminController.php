@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
@@ -30,7 +32,7 @@ class AdminController extends Controller
                 return $query->where('name', 'like', "%{$search}%")
                              ->orWhere('email', 'like', "%{$search}%");
             })
-            ->orderBy('created_at', 'desc')
+            ->orderByRaw('COALESCE(updated_at, created_at) DESC')
             ->paginate(10);
         
         // Ngubah timezone lewat function tadi
@@ -40,7 +42,7 @@ class AdminController extends Controller
         });
         
         return view('admin-management.index', compact('admins'));
-    }
+    }   
 
     public function create()
     {
@@ -124,6 +126,12 @@ class AdminController extends Controller
     {
         // Cari admin berdasarkan ID
         $admin = Admin::findOrFail($id);
+
+        // Cek apakah menghapus akun diri sendiri karena tidak boleh
+        if(Auth::id() == $admin->id) {
+            return redirect()->route('admin-management.index')
+                        ->with('error', 'Admin tidak dapat menghapus dirinya sendiri!');
+        }
 
         // Hapus admin
         $admin->delete();

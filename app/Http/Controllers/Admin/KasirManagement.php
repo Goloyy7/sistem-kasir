@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -11,6 +12,12 @@ use Carbon\Carbon;
 class KasirManagement extends Controller
 {
 
+    /**
+     * Convert timestamp to WIB (Waktu Indonesia Barat)
+     * 
+     * @param Carbon $dateTime
+     * @return Carbon
+     */
     private function convertToWIB($dateTime)
     {
         return $dateTime->setTimezone('Asia/Jakarta');
@@ -27,10 +34,11 @@ class KasirManagement extends Controller
                              ->orWhere('email', 'like', "%{$search}%")
                              ->orWhere('phone_number', 'like', "%{$search}%")
                              ->orWhere('address', 'like', "%{$search}%");
-            })
-            ->orderBy('created_at', 'desc')
+            }) // query nya berdasarkan data di user table, kaya name, email, phone_number, address
+            ->orderByRaw('COALESCE(updated_at, created_at) DESC')
             ->paginate(10);
 
+            // convert timestamp dibuat, diupdate ke WIB lewat private function tadi
             $kasirs->each(function ($user) {
             $user->created_at = $this->convertToWIB($user->created_at);
             $user->updated_at = $this->convertToWIB($user->updated_at);
@@ -174,6 +182,7 @@ class KasirManagement extends Controller
 
     public function toggleStatus(Request $request, $id)
     {
+        // function untuk langsung mengubah status langsung di index tanpa masuk ke edit
         $user = User::findOrFail($id);
         $user->is_active = $request->is_active;
         $user->save();

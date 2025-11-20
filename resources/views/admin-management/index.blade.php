@@ -11,6 +11,17 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+
+    @elseif ($message = Session::get('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                <span>{{ $message }}</span>
+            </div>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
     @endif
 
     <!-- Header Section -->

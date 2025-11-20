@@ -1,18 +1,29 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\KasirManagement;
-
-Route::get('/admin/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\KasirManagement;
 
 
-// User Management Routes
+// Authentikasi Routes
+Route::middleware('admin.guest')->group(function () {
 
-Route::resource('/admin/admin-management', AdminController::class);
-Route::resource('/admin/kasir-management', KasirManagement::class);
-Route::post('/admin/kasir-management/{id}/toggle-status', [KasirManagement::class, 'toggleStatus']);
+    Route::get('/admin/login', [AuthController::class, 'loginFormAdmin'])->name('loginAdmin');
+    Route::post('/admin/login', [AuthController::class, 'loginAdmin']);
+
+});
+
+Route::middleware('admin.auth')->group(function (){
+
+    Route::get('/admin/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboardAdmin');
+    Route::post('/admin/logout', [AuthController::class, 'logoutAdmin'])->name('logoutAdmin');
+
+    // User Management Routes
+    Route::resource('/admin/admin-management', AdminController::class);
+    Route::resource('/admin/kasir-management', KasirManagement::class);
+    Route::post('/admin/kasir-management/{id}/toggle-status', [KasirManagement::class, 'toggleStatus']);
+
+});
 
 
