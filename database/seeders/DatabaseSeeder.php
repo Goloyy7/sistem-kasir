@@ -20,6 +20,12 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'phone_number' => '081234567890',
+            'address' => 'Jl. Contoh Alamat No.123, Kota Contoh',
+            'is_active' => true,
         ]);
+
+        $this->call(AdminSeeder::class);
+        $this->call(UserSeeder::class);
     }
 }
