@@ -35,9 +35,9 @@ class AuthController extends Controller
         }
 
         // Remember me
-        // Auth::login($admin, $request->boolean('remember'));
+        // Auth::guard('admin')->login($admin, $request->boolean('remember'));
 
-        Auth::login($admin);
+        Auth::guard('admin')->login($admin);
 
         // Regenerate Session
         $request->session()->regenerate();
@@ -49,7 +49,7 @@ class AuthController extends Controller
 
     public function logoutAdmin(Request $request)
     {
-        Auth::logout();
+        Auth::guard('admin')->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

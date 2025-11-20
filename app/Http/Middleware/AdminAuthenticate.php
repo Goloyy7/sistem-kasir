@@ -17,7 +17,7 @@ class AdminAuthenticate
     public function handle(Request $request, Closure $next): Response
     {
        // Kalau belum login
-        if (! Auth::check()) {
+        if (! Auth::guard('admin')->check()) {
             // Redirect ke halaman login admin
             return redirect()
                 ->route('loginAdmin') // ganti kalau nama route login kamu beda

@@ -17,7 +17,7 @@ class RedirectIfAdminAuthenticated
     public function handle(Request $request, Closure $next): Response
     {
         // Kalau user sudah login
-        if (Auth::check()) {
+        if (Auth::guard('admin')->check()) {
             // Redirect ke dashboard admin (atau route yang kamu mau)
             return redirect()->route('dashboardAdmin')
             ->with('error', 'Silakan logout terlebih dahulu.'); // ganti sesuai nama route dashboard kamu
