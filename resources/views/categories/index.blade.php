@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('page', 'Admin Management')
+@section('page', 'Manajemen Kategori')
 @section('content')
     @if ($message = Session::get('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -27,21 +27,21 @@
     <!-- Header Section -->
     <div class="row mb-4">
         <div class="col-lg-6">
-            <h2 class="h4 text-gray-900 font-weight-bold mb-2">Kelola Admin</h2>
-            <p class="text-gray-600 mb-0">Manage semua akun admin sistem kasir Anda di sini.</p>
+            <h2 class="h4 text-gray-900 font-weight-bold mb-2">Kelola Kategori</h2>
+            <p class="text-gray-600 mb-0">Manage semua kategori produk sistem kasir Anda di sini.</p>
         </div>
     </div>
 
-    <!-- Admin Table Card -->
+    <!-- Categories Table Card -->
     <div class="card shadow border-0">
         <div class="card-header bg-white py-4 border-bottom-subtle">
             <div class="row align-items-center">
                 <div class="col-lg-12">
                     <h6 class="m-0 font-weight-bold text-primary">
-                        <i class="fas fa-users mr-2"></i>Daftar Admin Terdaftar
+                        <i class="fas fa-list mr-2"></i>Daftar Kategori Terdaftar
                     </h6>
                     <small class="text-muted d-block mt-2">
-                        Total: <strong>{{ $admins->total() }}</strong> admin
+                        Total: <strong>{{ $categories->total() }}</strong> kategori
                     </small>
                 </div>
             </div>
@@ -49,7 +49,7 @@
 
         <!-- Search Box -->
         <div class="card-body border-bottom">
-            <form action="{{ route('admin-management.index') }}" method="GET">
+            <form action="{{ route('categories.index') }}" method="GET">
                 <div class="row">
                     <div class="col-md-8">
                         <div class="input-group">
@@ -59,7 +59,7 @@
                                 </span>
                             </div>
                             <input type="text" name="search" class="form-control border-left-0 pl-0" 
-                                   placeholder="Cari berdasarkan nama atau email..." 
+                                   placeholder="Cari berdasarkan nama kategori..." 
                                    value="{{ request('search') }}">
                         </div>
                     </div>
@@ -68,11 +68,11 @@
                             <i class="fas fa-search mr-1"></i> Cari
                         </button>
                         @if(request('search'))
-                            <a href="{{ route('admin-management.index') }}" class="btn btn-secondary btn-sm">
+                            <a href="{{ route('categories.index') }}" class="btn btn-secondary btn-sm">
                                 <i class="fas fa-redo mr-1"></i> Reset
                             </a>
                         @endif
-                        <a href="{{ route('admin-management.create') }}" class="btn btn-success btn-sm shadow-sm float-right">
+                        <a href="{{ route('categories.create') }}" class="btn btn-success btn-sm shadow-sm float-right">
                             <i class="fas fa-plus mr-2"></i> Tambah Data
                         </a>
                     </div>
@@ -81,7 +81,7 @@
         </div>
 
         <div class="card-body p-0">
-            @forelse ($admins as $admin)
+            @forelse ($categories as $category)
                 @if ($loop->first)
                     <div class="table-responsive">
                         <table class="table table-sm table-borderless mb-0 align-middle">
@@ -91,10 +91,7 @@
                                         No
                                     </th>
                                     <th class="text-uppercase text-muted font-weight-600 small py-2 px-3">
-                                        Nama
-                                    </th>
-                                    <th class="text-uppercase text-muted font-weight-600 small py-2 px-3">
-                                        Email
+                                        Nama Kategori
                                     </th>
                                     <th class="text-uppercase text-muted font-weight-600 small py-2 px-3">
                                         Dibuat
@@ -108,31 +105,28 @@
                 @endif
                                 <tr class="border-bottom">
                                     <td class="text-center text-muted small py-2 px-3 align-middle">
-                                        {{ ($admins->currentPage() - 1) * $admins->perPage() + $loop->iteration }}
+                                        {{ ($categories->currentPage() - 1) * $categories->perPage() + $loop->iteration }}
                                     </td>
                                     <td class="py-2 px-3 align-middle">
-                                        <span class="font-weight-500 text-gray-900">{{ $admin->name }}</span>
-                                    </td>
-                                    <td class="py-2 px-3 align-middle">
-                                        <span class="text-muted small">{{ $admin->email }}</span>
+                                        <span class="font-weight-500 text-gray-900">{{ $category->name }}</span>
                                     </td>
                                     <td class="py-2 px-3 align-middle">
                                         <span class="badge badge-light text-muted"
                                             style="background-color: #f8f9fa; border: 1px solid #dee2e6;">
-                                            <i class="far fa-calendar mr-1"></i>{{ $admin->created_at->format('d M Y') }}
+                                            <i class="far fa-calendar mr-1"></i>{{ $category->created_at->format('d M Y') }}
                                         </span>
                                         <small class="d-block text-muted mt-1">
-                                            {{ $admin->created_at->format('H:i') }}
+                                            {{ $category->created_at->format('H:i') }}
                                         </small>
                                     </td>
                                     <td class="py-2 px-3 text-center align-middle">
                                         <div class="d-flex gap-2 justify-content-center">
-                                            <a href="{{ route('admin-management.edit', $admin->id) }}"
+                                            <a href="{{ route('categories.edit', $category->id) }}"
                                             class="btn btn-sm p-2 text-primary text-decoration-none"
                                             title="Edit">
                                                 <i class="fas fa-pencil-alt"></i>
                                             </a>
-                                            <form action="{{ route('admin-management.destroy', $admin->id) }}"
+                                            <form action="{{ route('categories.destroy', $category->id) }}"
                                                 method="POST"
                                                 class="d-inline m-0">
                                                 @csrf
@@ -140,7 +134,7 @@
                                                 <button type="submit"
                                                         class="btn btn-sm p-2 text-danger text-decoration-none border-0 bg-transparent"
                                                         title="Delete"
-                                                        onclick="return confirm('Yakin ingin menghapus admin ini?')"
+                                                        onclick="return confirm('Yakin ingin menghapus kategori ini?')"
                                                         style="cursor: pointer;">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
@@ -154,48 +148,31 @@
                     </div>
                 @endif
             @empty
-                <div class="text-center py-5 px-4">
-                    <div class="mb-3">
-                        <i class="fas fa-inbox fa-3x text-muted"></i>
-                    </div>
-                    @if(request('search'))
-                        <h5 class="text-gray-600 mb-1">Tidak Ada Hasil</h5>
-                        <p class="text-muted mb-3">Tidak ditemukan admin dengan kata kunci "{{ request('search') }}"</p>
-                        <a href="{{ route('admin-management.index') }}" class="btn btn-sm btn-secondary">
-                            <i class="fas fa-redo mr-1"></i> Kembali ke Semua Admin
-                        </a>
-                    @else
-                        <h5 class="text-gray-600 mb-1">Belum Ada Data Admin</h5>
-                        <p class="text-muted mb-3">Mulai tambahkan admin baru untuk mengelola sistem kasir Anda.</p>
-                        <a href="{{ route('admin-management.create') }}" class="btn btn-sm btn-success">
-                            <i class="fas fa-plus mr-1"></i> Tambah Admin Pertama
-                        </a>
-                    @endif
-                </div>
+                ...
             @endforelse
         </div>
 
 
         <!-- Pagination -->
-        @if ($admins->hasPages())
+        @if ($categories->hasPages())
             <div class="card-footer bg-white py-3 px-4 border-top-subtle">
                 <div class="row align-items-center">
                     <div class="col-md-6">
                         <small class="text-muted">
-                            Menampilkan <strong>{{ $admins->firstItem() }}</strong> sampai <strong>{{ $admins->lastItem() }}</strong> dari <strong>{{ $admins->total() }}</strong> admin
+                            Menampilkan <strong>{{ $categories->firstItem() }}</strong> sampai <strong>{{ $categories->lastItem() }}</strong> dari <strong>{{ $categories->total() }}</strong> kategori
                         </small>
                     </div>
                     <div class="col-md-6">
                         <div class="text-right mt-3 mt-md-0">
-                            {{ $admins->appends(request()->query())->links('pagination::bootstrap-4') }}
+                            {{ $categories->appends(request()->query())->links('pagination::bootstrap-4') }}
                         </div>
                     </div>
                 </div>
             </div>
-        @elseif ($admins->count() > 0)
+        @elseif ($categories->count() > 0)
             <div class="card-footer bg-light py-3 px-4 border-top-subtle">
                 <small class="text-muted">
-                    Menampilkan <strong>{{ $admins->count() }}</strong> admin
+                    Menampilkan <strong>{{ $categories->count() }}</strong> kategori
                 </small>
             </div>
         @endif

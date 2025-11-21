@@ -73,76 +73,122 @@
             @forelse ($kasirs as $kasir)
                 @if ($loop->first)
                     <div class="table-responsive">
-                        <table class="table table-sm table-borderless mb-0">
+                        <table class="table table-sm table-borderless mb-0 align-middle">
                             <thead class="bg-light">
                                 <tr>
-                                    <th class="text-center text-uppercase text-muted font-weight-600 small py-3 pl-4" style="width: 60px;">No</th>
-                                    <th class="text-uppercase text-muted font-weight-600 small py-3">Foto</th>
-                                    <th class="text-uppercase text-muted font-weight-600 small py-3">Nama</th>
-                                    <th class="text-uppercase text-muted font-weight-600 small py-3">Email</th>
-                                    <th class="text-uppercase text-muted font-weight-600 small py-3">No Hp</th>
-                                    <th class="text-uppercase text-muted font-weight-600 small py-3">Alamat</th>
-                                    <th class="text-uppercase text-muted font-weight-600 small py-3">Status</th>
-                                    <th class="text-uppercase text-muted font-weight-600 small py-3">Dibuat</th>
-                                    <th class="text-center text-uppercase text-muted font-weight-600 small py-3" style="width: 120px;">Aksi</th>
+                                    <th class="text-center text-muted font-weight-600 small py-2 px-3" style="width: 60px;">
+                                        No
+                                    </th>
+                                    <th class="text-uppercase text-muted font-weight-600 small py-2 px-3">
+                                        Foto
+                                    </th>
+                                    <th class="text-uppercase text-muted font-weight-600 small py-2 px-3">
+                                        Nama
+                                    </th>
+                                    <th class="text-uppercase text-muted font-weight-600 small py-2 px-3">
+                                        Email
+                                    </th>
+                                    <th class="text-uppercase text-muted font-weight-600 small py-2 px-3">
+                                        No Hp
+                                    </th>
+                                    <th class="text-uppercase text-muted font-weight-600 small py-2 px-3">
+                                        Alamat
+                                    </th>
+                                    <th class="text-uppercase text-muted font-weight-600 small py-2 px-3">
+                                        Status
+                                    </th>
+                                    <th class="text-uppercase text-muted font-weight-600 small py-2 px-3">
+                                        Dibuat
+                                    </th>
+                                    <th class="text-center text-muted font-weight-600 small py-2 px-3" style="width: 120px;">
+                                        Aksi
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                 @endif
                                 <tr class="border-bottom">
-                                    <td class="text-center text-muted small py-3 align-middle pl-4">
+                                    {{-- No --}}
+                                    <td class="text-center text-muted small py-2 px-3 align-middle">
                                         {{ ($kasirs->currentPage() - 1) * $kasirs->perPage() + $loop->iteration }}
                                     </td>
-                                    <td class="py-3 align-middle">
-                                        @if($kasir->foto)
-                                            <img src="{{ asset('storage/' . $kasir->foto) }}" alt="{{ $kasir->name }}" class="rounded-circle foto-preview" style="width: 35px; height: 35px; object-fit: cover; border: 1px solid #dee2e6; cursor: pointer;" data-toggle="modal" data-target="#fotoModal" data-foto="{{ asset('storage/' . $kasir->foto) }}" data-nama="{{ $kasir->name }}">
+
+                                    {{-- Foto --}}
+                                    <td class="py-2 px-3 align-middle">
+                                        @if($kasir->foto && file_exists(public_path('storage/' . $kasir->foto)))
+                                            <img src="{{ asset('storage/' . $kasir->foto) }}"
+                                                alt="{{ $kasir->name }}"
+                                                class="img-thumbnail"
+                                                style="width: 40px; height: 40px; object-fit: cover;">
                                         @else
-                                            <div class="bg-secondary d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 35px; height: 35px;">
-                                                <i class="fas fa-user text-white" style="font-size: 0.875rem;"></i>
+                                            <div class="bg-light d-inline-flex align-items-center justify-content-center"
+                                                style="width: 40px; height: 40px; border: 1px solid #dee2e6; border-radius: 4px;">
+                                                <i class="fas fa-user text-muted" style="font-size: 0.875rem;"></i>
                                             </div>
                                         @endif
                                     </td>
-                                    <td class="py-3 align-middle">
+
+                                    {{-- Nama --}}
+                                    <td class="py-2 px-3 align-middle">
                                         <span class="font-weight-500 text-gray-900">{{ $kasir->name }}</span>
                                     </td>
-                                    <td class="py-3 align-middle">
+
+                                    {{-- Email --}}
+                                    <td class="py-2 px-3 align-middle">
                                         <span class="text-muted small">{{ $kasir->email }}</span>
                                     </td>
-                                    <td class="py-3 align-middle">
+
+                                    {{-- No Hp --}}
+                                    <td class="py-2 px-3 align-middle">
                                         <span class="text-muted small">{{ $kasir->phone_number ?? '-' }}</span>
                                     </td>
-                                    <td class="py-3 align-middle">
+
+                                    {{-- Alamat --}}
+                                    <td class="py-2 px-3 align-middle">
                                         <span class="text-muted small" title="{{ $kasir->address }}">
-                                            {{ \Illuminate\Support\Str::limit($kasir->address ?? '', 20) ?? '-' }}
+                                            {{ \Illuminate\Support\Str::limit($kasir->address ?? '', 20) ?: '-' }}
                                         </span>
                                     </td>
-                                    <td class="py-3 align-middle">
-                                        <button type="button" class="btn btn-sm p-1 toggle-status" data-id="{{ $kasir->id }}" data-status="{{ $kasir->is_active }}" style="border: none; background: none;">
-                                            @if($kasir->is_active)
-                                                <span class="badge badge-success">Aktif</span>
-                                            @else
-                                                <span class="badge badge-danger">Nonaktif</span>
-                                            @endif
-                                        </button>
+
+                                    {{-- Status --}}
+                                    <td class="py-2 px-3 align-middle">
+                                        {{-- pakai isi button/status kamu yang lama di sini, cukup ganti class td-nya jadi py-2 px-3 --}}
+                                        @if($kasir->is_active)
+                                            <span class="badge badge-success">Aktif</span>
+                                        @else
+                                            <span class="badge badge-secondary">Nonaktif</span>
+                                        @endif
                                     </td>
-                                    <td class="py-3 align-middle">
-                                        <span class="badge badge-light text-muted" style="background-color: #f8f9fa; border: 1px solid #dee2e6;">
+
+                                    {{-- Dibuat --}}
+                                    <td class="py-2 px-3 align-middle">
+                                        <span class="badge badge-light text-muted"
+                                            style="background-color: #f8f9fa; border: 1px solid #dee2e6;">
                                             <i class="far fa-calendar mr-1"></i>{{ $kasir->created_at->format('d M Y') }}
                                         </span>
-                                        <small class="d-block text-muted">{{ $kasir->created_at->format('H:i') }}</small>
+                                        <small class="d-block text-muted mt-1">
+                                            {{ $kasir->created_at->format('H:i') }}
+                                        </small>
                                     </td>
-                                    <td class="py-3 text-center align-middle">
+
+                                    {{-- Aksi --}}
+                                    <td class="py-2 px-3 text-center align-middle">
                                         <div class="d-flex gap-2 justify-content-center">
-                                            <a href="{{ route('kasir-management.show', $kasir->id) }}" class="btn btn-sm p-2 text-info text-decoration-none" title="Lihat Detail">
-                                                <i class="fas fa-search"></i>
-                                            </a>
-                                            <a href="{{ route('kasir-management.edit', $kasir->id) }}" class="btn btn-sm p-2 text-primary text-decoration-none" title="Edit">
+                                            <a href="{{ route('kasir-management.edit', $kasir->id) }}"
+                                            class="btn btn-sm p-2 text-primary text-decoration-none"
+                                            title="Edit">
                                                 <i class="fas fa-pencil-alt"></i>
                                             </a>
-                                            <form action="{{ route('kasir-management.destroy', $kasir->id) }}" method="POST" class="d-inline m-0">
+                                            <form action="{{ route('kasir-management.destroy', $kasir->id) }}"
+                                                method="POST"
+                                                class="d-inline m-0">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm p-2 text-danger text-decoration-none border-0 bg-transparent" title="Delete" onclick="return confirm('Yakin ingin menghapus kasir ini?')" style="cursor: pointer;">
+                                                <button type="submit"
+                                                        class="btn btn-sm p-2 text-danger text-decoration-none border-0 bg-transparent"
+                                                        title="Delete"
+                                                        onclick="return confirm('Yakin ingin menghapus kasir ini?')"
+                                                        style="cursor: pointer;">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </form>
@@ -155,26 +201,11 @@
                     </div>
                 @endif
             @empty
-                <div class="text-center py-5 px-4">
-                    <div class="mb-3">
-                        <i class="fas fa-inbox fa-3x text-muted"></i>
-                    </div>
-                    @if(request('search'))
-                        <h5 class="text-gray-600 mb-1">Tidak Ada Hasil</h5>
-                        <p class="text-muted mb-3">Tidak ditemukan kasir dengan kata kunci "{{ request('search') }}"</p>
-                        <a href="{{ route('kasir-management.index') }}" class="btn btn-sm btn-secondary">
-                            <i class="fas fa-redo mr-1"></i> Kembali ke Semua Kasir
-                        </a>
-                    @else
-                        <h5 class="text-gray-600 mb-1">Belum Ada Data Kasir</h5>
-                        <p class="text-muted mb-3">Mulai tambahkan kasir baru untuk mengelola sistem kasir Anda.</p>
-                        <a href="{{ route('kasir-management.create') }}" class="btn btn-sm btn-success">
-                            <i class="fas fa-plus mr-1"></i> Tambah Kasir Pertama
-                        </a>
-                    @endif
-                </div>
+                {{-- bagian kosongmu yang lama biarkan saja seperti sebelumnya --}}
+                {{-- ... --}}
             @endforelse
         </div>
+
 
         <!-- Pagination -->
         @if ($kasirs->hasPages())

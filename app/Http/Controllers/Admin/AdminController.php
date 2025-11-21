@@ -128,7 +128,7 @@ class AdminController extends Controller
         $admin = Admin::findOrFail($id);
 
         // Cek apakah menghapus akun diri sendiri karena tidak boleh
-        if(Auth::id() == $admin->id) {
+        if(Auth::guard('admin')->id() == $admin->id) {
             return redirect()->route('admin-management.index')
                         ->with('error', 'Admin tidak dapat menghapus dirinya sendiri!');
         }

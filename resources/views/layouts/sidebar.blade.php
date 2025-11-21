@@ -30,13 +30,17 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>User Management</span>
+                    <i class="fas fa-fw fa-users"></i>
+                    <span>User</span>
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{{ route('admin-management.index') }}">Admin Management</a>
-                        <a class="collapse-item" href="{{ route('kasir-management.index') }}">Kasir Management</a>
+                        <a class="collapse-item" href="{{ route('admin-management.index') }}">
+                            <i class="fas fa-shield-alt mr-2"></i>Admin Management
+                        </a>
+                        <a class="collapse-item" href="{{ route('kasir-management.index') }}">
+                            <i class="fas fa-cash-register mr-2"></i>Kasir Management
+                        </a>
                     </div>
                 </div>
             </li>
@@ -45,17 +49,18 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                     aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-fw fa-wrench"></i>
-                    <span>Utilities</span>
+                    <i class="fas fa-fw fa-box"></i>
+                    <span>Product</span>
                 </a>
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Utilities:</h6>
-                        <a class="collapse-item" href="utilities-color.html">Colors</a>
-                        <a class="collapse-item" href="utilities-border.html">Borders</a>
-                        <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                        <a class="collapse-item" href="utilities-other.html">Other</a>
+                        <a class="collapse-item" href="{{ route('categories.index') }}">
+                            <i class="fas fa-list mr-2"></i>Category Management
+                        </a>
+                        <a class="collapse-item" href="{{ route('products.index') }}">
+                            <i class="fas fa-cube mr-2"></i>Product Management
+                        </a>
                     </div>
                 </div>
             </li>
