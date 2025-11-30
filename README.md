@@ -106,6 +106,24 @@ Konsep utama:
 
 ## 4. ERD (Entity Relationship Diagram)
 ![ERD Sistem POS](docs/erd.png)
+### 🔗 Deskripsi Singkat Relasi
+
+- **categories → products** : one to many  
+  (satu kategori punya banyak produk)
+
+- **products → transaction_details** : one to many  
+  (satu produk bisa muncul di banyak detail transaksi)
+
+- **transactions → transaction_details** : one to many  
+  (satu transaksi berisi banyak baris detail barang)
+
+- **users (kasir) → transactions** : one to many  
+  (satu kasir bisa melakukan banyak transaksi)
+
+- **admins** : berdiri sendiri  
+  (dipakai untuk login & manajemen, tidak langsung terhubung ke transaksi)
+
+> Tabel bawaan Laravel seperti `migrations`, `failed_jobs`, `password_reset_tokens`, `personal_access_tokens`, atau `sessions` **tidak ditampilkan** di ERD karena hanya digunakan untuk kebutuhan teknis framework, bukan bagian utama alur bisnis POS.
 
 ---
 
