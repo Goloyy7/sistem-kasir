@@ -38,7 +38,7 @@ Route::middleware('admin.auth')->group(function ()
     Route::get('/admin/transactions', [TransactionController::class, 'adminIndex'])
         ->name('admin.transactions.index');
 
-    Route::get('/admin/transactions/{invoiceCode}/pdf', [TransactionController::class, 'adminStrukPdf'])
+    Route::get('/admin/transactions/{invoiceCode}/pdf', [TransactionController::class, 'strukPdf'])
         ->name('admin.transactions.pdf');
 
 });

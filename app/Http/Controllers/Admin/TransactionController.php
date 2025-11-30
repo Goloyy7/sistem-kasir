@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Session;
 class TransactionController extends Controller
 {
 
+    // Halaman daftar transaksi untuk admin
     public function adminIndex(Request $request)
     {
         $query = Transaction::with('user')->latest();
@@ -73,30 +74,7 @@ class TransactionController extends Controller
         return view('transactions.index', compact('transactions'));
     }
 
-    /**
-     * Download struk PDF dari sisi admin
-     * ----------------------------------
-     * Pakai view struk-pdf yang sama dengan kasir, jadi tidak duplikasi desain.
-     */
-    public function adminStrukPdf($invoiceCode)
-    {
-        $transaction = Transaction::where('invoice_code', $invoiceCode)
-            ->with(['user', 'details.product'])
-            ->firstOrFail();
-
-        // Lebar kertas ±70mm, sama seperti yang kita pakai di strukPdf kasir
-        $customPaper = [0, 0, 200, 600];
-
-        $pdf = Pdf::loadView('kasir.struk-pdf', compact('transaction'))
-            ->setPaper($customPaper, 'portrait');
-
-        $fileName = 'struk-' . $transaction->invoice_code . '.pdf';
-
-        return $pdf->download($fileName);
-    }
-    /**
-     * Tampilkan halaman transaksi kasir
-     */
+    // Halaman transaksi kasir
     public function index(Request $request)
     {
         // Ambil cart dari session (kalau belum ada, isi dengan array kosong)
@@ -109,9 +87,7 @@ class TransactionController extends Controller
         return view('kasir.transaksi', compact('cart', 'totalPrice', 'products'));
     }
 
-    /**
-     * Tambah produk ke cart berdasarkan kode_barang
-     */
+    // Tambah Produk ke cart (store)
     public function addToCart(Request $request)
     {
         // Validasi input dari form
@@ -197,9 +173,7 @@ class TransactionController extends Controller
             ->with('success', 'Produk berhasil ditambahkan ke keranjang.');
     }
 
-    /**
-     * Update jumlah qty item di cart
-     */
+    // Update qty produk yang sudah di cart
     public function updateCart(Request $request, $productId)
     {
         $request->validate([
@@ -239,9 +213,7 @@ class TransactionController extends Controller
             ->with('success', 'Jumlah produk berhasil diubah.');
     }
 
-    /**
-     * Hapus satu item dari cart
-     */
+    // Hapus item dari cart
     public function removeFromCart(Request $request, $productId)
     {
         $cart = $request->session()->get('cart', []);
@@ -255,9 +227,7 @@ class TransactionController extends Controller
             ->with('success', 'Produk dihapus dari keranjang.');
     }
 
-    /**
-     * Hapus semua item di cart (optional tapi kadang berguna)
-     */
+    // Hapus semua item dari cart
     public function clearCart(Request $request)
     {
         $request->session()->forget('cart');
@@ -354,9 +324,7 @@ class TransactionController extends Controller
         }
     }
 
-    /**
-     * Tampilkan halaman struk berdasarkan invoice_code
-     */
+    // Menampilkan struk transaksi berdasarkan invoice_code
     public function struk($invoiceCode)
     {
         // Cari transaksi berdasarkan invoice_code
@@ -367,9 +335,7 @@ class TransactionController extends Controller
         return view('kasir.struk', compact('transaction'));
     }
 
-    /**
-     * Download struk sebagai PDF (menggunakan Dompdf)
-     */
+    // Download struk pdf sebagai kasir
     public function strukPdf($invoiceCode)
     {
         $transaction = Transaction::where('invoice_code', $invoiceCode)
@@ -384,12 +350,21 @@ class TransactionController extends Controller
 
         $fileName = 'struk-' . $transaction->invoice_code . '.pdf';
 
+        // Jika yang login adalah ADMIN → tampilkan di browser (stream)
+        if (Auth::guard('admin')->check()) {
+            return $pdf->stream($fileName);
+        }
+
+        // Jika yang login adalah USER / KASIR → paksa download
+        if (Auth::guard('user')->check()) {
+            return $pdf->download($fileName);
+        }
+
+        // Fallback (kalau tidak jelas guard-nya), aman-aman saja paksa download
         return $pdf->download($fileName);
     }
 
-    /**
-     * Fungsi sederhana untuk menghitung total harga cart
-     */
+    // Fungsi untuk menghitung total harga dari cart
     private function calculateTotalPrice(array $cart): int
     {
         $total = 0;
