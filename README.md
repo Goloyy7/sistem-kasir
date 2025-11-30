@@ -26,6 +26,9 @@ Konsep utama:
 ### 2.2 Modul Admin
 
 - Login admin dengan tabel dan guard terpisah dari kasir.
+- **Manajemen Admin**
+  - CRUD data admin (tambah, edit, hapus)
+  - Memiliki keamanan tidak bisa menghapus akun sendiri
 - **Manajemen Kasir**
   - CRUD data kasir (tambah, edit, hapus).
   - Kolom `is_active` untuk mengaktifkan/nonaktifkan akun kasir.
@@ -33,7 +36,6 @@ Konsep utama:
   - Manajemen kategori & produk.
   - Input: nama, foto, deskripsi, harga, stok, dll.
   - Otomatis generate **`kode_barang`** pada model Product (misal `PRD-00001`).
-  - Pengaturan diskon dengan periode waktu tertentu.
 - **Monitoring Transaksi**
   - Tabel daftar transaksi yang rapi.
   - Fitur filter:
@@ -129,14 +131,25 @@ Konsep utama:
 
 ## 5. UML Use Case Diagram
 
-> Gambar UML dapat dimasukkan di folder `docs/` atau sesuai kebutuhan.
+![ERD Sistem POS](docs/uml-usecase.png)
 
-Contoh format penyisipan gambar:
+### 🧩 Deskripsi Singkat UML Use Case
 
-```markdown
-![ERD Sistem POS](docs/erd-pos.png)
-```
+- Terdapat **2 aktor utama**: **Admin** dan **Kasir**.
+- **Admin** dapat:
+  - Login ke sistem.
+  - Mengelola Admin
+  - Mengelola kasir.
+  - Mengelola kategori dan produk.
+  - Melihat dan memfilter daftar transaksi.
+  - Mengunduh struk transaksi dalam bentuk PDF.
+- **Kasir** dapat:
+  - Login ke sistem.
+  - Menginput barang ke keranjang.
+  - Memproses transaksi.
+  - Mencetak atau mengunduh struk setelah transaksi selesai.
 
+> Diagram ini menunjukkan siapa yang menggunakan sistem dan fitur utama apa saja yang dapat diakses oleh masing-masing aktor.
 
 ---
 
