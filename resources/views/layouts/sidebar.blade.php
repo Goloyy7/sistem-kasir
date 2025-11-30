@@ -23,7 +23,7 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Interface
+                Management
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
@@ -63,6 +63,12 @@
                         </a>
                     </div>
                 </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.transactions.index') }}">
+                    <i class="fas fa-fw fa-receipt"></i>
+                    <span>Transaksi</span></a>
             </li>
 
             <!-- Sidebar Toggler (Sidebar) -->

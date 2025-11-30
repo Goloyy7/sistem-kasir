@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use Carbon\Carbon;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,6 +17,19 @@ class Product extends Model
         'stock',
         'image'
     ];
+
+    protected static function booted()
+    {
+        // Event untuk generate kode_barang otomatis setelah produk dibuat
+       static::created(function (Product $product) {
+           if (empty($product->kode_barang)) {
+               $product->kode_barang = 'PRD-' . str_pad($product->id, 5, '0', STR_PAD_LEFT);
+
+               // Simpan tanpa memicu event lagi
+               $product->saveQuietly();
+           }
+       });
+    }
 
     public function category()
     {

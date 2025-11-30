@@ -11,17 +11,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    /**
-     * Convert timestamp to WIB (Waktu Indonesia Barat)
-     * 
-     * @param Carbon $dateTime
-     * @return Carbon
-     */
-    private function convertToWIB($dateTime)
-    {
-        return $dateTime->setTimezone('Asia/Jakarta');
-    }
-
+    
     public function index(Request $request)
     {
         // Kode biar bisa searching
@@ -51,11 +41,6 @@ class ProductController extends Controller
             ->orderByRaw('COALESCE(updated_at, created_at) DESC')
             ->paginate(10);
         
-        // Ngubah timezone lewat function tadi
-        $products->each(function ($product) {
-            $product->created_at = $this->convertToWIB($product->created_at);
-            $product->updated_at = $this->convertToWIB($product->updated_at);
-        });
 
         // Ambil semua kategori untuk filter
         $categories = Category::all();
@@ -105,9 +90,6 @@ class ProductController extends Controller
 
         // Simpan ke database
         $product = Product::create($validated);
-
-        $product->kode_barang = 'PRD-' . str_pad($product->id, 5, '0', STR_PAD_LEFT);
-        $product->save();
 
         // Redirect dengan notifikasi sukses
         return redirect()->route('products.index')

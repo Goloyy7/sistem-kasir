@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class AdminAuthenticate
+class KasirAuthenticate
 {
     /**
      * Handle an incoming request.
@@ -16,15 +16,12 @@ class AdminAuthenticate
      */
     public function handle(Request $request, Closure $next): Response
     {
-       // Kalau belum login
-        if (! Auth::guard('admin')->check()) {
-            // Redirect ke halaman login admin
+        if(! Auth::guard('user')->check()) {
             return redirect()
-                ->route('loginAdmin')
+                ->route('loginKasir') // ganti kalau nama route login kamu beda
                 ->with('error', 'Silakan login terlebih dahulu.');
         }
 
-        // Kalau sudah login, lanjut ke halaman yang diminta
         return $next($request);
     }
 }

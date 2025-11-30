@@ -12,38 +12,27 @@ use Carbon\Carbon;
 class KasirManagement extends Controller
 {
 
-    /**
-     * Convert timestamp to WIB (Waktu Indonesia Barat)
-     * 
-     * @param Carbon $dateTime
-     * @return Carbon
-     */
-    private function convertToWIB($dateTime)
-    {
-        return $dateTime->setTimezone('Asia/Jakarta');
-    }
-
     public function index(Request $request)
     {
         // Kode biar bisa searching
         $search = $request->get('search');
+        $is_active = $request->get('is_active');
 
         $kasirs = User::query()
             ->when($search, function ($query, $search) {
-                return $query->where('name', 'like', "%{$search}%")
-                             ->orWhere('email', 'like', "%{$search}%")
-                             ->orWhere('phone_number', 'like', "%{$search}%")
-                             ->orWhere('address', 'like', "%{$search}%");
-            }) // query nya berdasarkan data di user table, kaya name, email, phone_number, address
+                return $query->where(function($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%")
+                      ->orWhere('phone_number', 'like', "%{$search}%")
+                      ->orWhere('address', 'like', "%{$search}%");
+                });
+            })
+            ->when($is_active !== null && $is_active !== '', function ($query) use ($is_active) {
+                return $query->where('is_active', (int)$is_active);
+            })
             ->orderByRaw('COALESCE(updated_at, created_at) DESC')
             ->paginate(10);
 
-            // convert timestamp dibuat, diupdate ke WIB lewat private function tadi
-            $kasirs->each(function ($user) {
-            $user->created_at = $this->convertToWIB($user->created_at);
-            $user->updated_at = $this->convertToWIB($user->updated_at);
-        });
-        
         return view('kasir-management.index', compact('kasirs'));
     }
 
@@ -55,8 +44,6 @@ class KasirManagement extends Controller
     public function show($id)
     {
         $user = User::findOrFail($id);
-        $user->created_at = $this->convertToWIB($user->created_at);
-        $user->updated_at = $this->convertToWIB($user->updated_at);
         return view('kasir-management.show', compact('user'));
     }
 

@@ -50,28 +50,29 @@
         <!-- Search Box -->
         <div class="card-body border-bottom">
             <form action="{{ route('categories.index') }}" method="GET">
+
                 <div class="row">
                     <div class="col-md-8">
+
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text bg-white border-right-0">
-                                    <i class="fas fa-search text-muted"></i>
-                                </span>
-                            </div>
-                            <input type="text" name="search" class="form-control border-left-0 pl-0" 
+                            <input type="text" name="search" class="form-control" 
                                    placeholder="Cari berdasarkan nama kategori..." 
                                    value="{{ request('search') }}">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                                @if(request('search'))
+                                    <a href="{{ route('categories.index')}}" 
+                                       class="btn btn-secondary">
+                                        <i class="fas fa-times"></i>
+                                    </a>
+                                @endif
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-4 mt-2 mt-md-0">
-                        <button type="submit" class="btn btn-primary btn-sm mr-2">
-                            <i class="fas fa-search mr-1"></i> Cari
-                        </button>
-                        @if(request('search'))
-                            <a href="{{ route('categories.index') }}" class="btn btn-secondary btn-sm">
-                                <i class="fas fa-redo mr-1"></i> Reset
-                            </a>
-                        @endif
+                        
                         <a href="{{ route('categories.create') }}" class="btn btn-success btn-sm shadow-sm float-right">
                             <i class="fas fa-plus mr-2"></i> Tambah Data
                         </a>
@@ -148,7 +149,24 @@
                     </div>
                 @endif
             @empty
-                ...
+                <div class="text-center py-5 px-4">
+                    <div class="mb-3">
+                        <i class="fas fa-layer-group fa-3x text-muted"></i>
+                    </div>
+                    @if(request('search'))
+                        <h5 class="text-gray-600 mb-1">Tidak Ada Hasil</h5>
+                        <p class="text-muted mb-3">Tidak ditemukan kategori dengan kata kunci "{{ request('search') }}"</p>
+                        <a href="{{ route('categories.index') }}" class="btn btn-sm btn-secondary">
+                            <i class="fas fa-redo mr-1"></i> Kembali ke Semua Kategori
+                        </a>
+                    @else
+                        <h5 class="text-gray-600 mb-1">Belum Ada Data Kategori</h5>
+                        <p class="text-muted mb-3">Mulai tambahkan kategori baru untuk sistem kasir Anda.</p>
+                        <a href="{{ route('categories.create') }}" class="btn btn-sm btn-success">
+                            <i class="fas fa-plus mr-1"></i> Tambah Kategori Pertama
+                        </a>
+                    @endif
+                </div>
             @endforelse
         </div>
 

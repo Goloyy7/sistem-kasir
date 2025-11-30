@@ -53,25 +53,23 @@
                 <div class="row">
                     <div class="col-md-8">
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text bg-white border-right-0">
-                                    <i class="fas fa-search text-muted"></i>
-                                </span>
-                            </div>
-                            <input type="text" name="search" class="form-control border-left-0 pl-0" 
+                            <input type="text" name="search" class="form-control" 
                                    placeholder="Cari berdasarkan nama atau email..." 
                                    value="{{ request('search') }}">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                                @if(request('search'))
+                                    <a href="{{ route('admin-management.index') }}" 
+                                       class="btn btn-secondary">
+                                        <i class="fas fa-times"></i>
+                                    </a>
+                                @endif
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-4 mt-2 mt-md-0">
-                        <button type="submit" class="btn btn-primary btn-sm mr-2">
-                            <i class="fas fa-search mr-1"></i> Cari
-                        </button>
-                        @if(request('search'))
-                            <a href="{{ route('admin-management.index') }}" class="btn btn-secondary btn-sm">
-                                <i class="fas fa-redo mr-1"></i> Reset
-                            </a>
-                        @endif
                         <a href="{{ route('admin-management.create') }}" class="btn btn-success btn-sm shadow-sm float-right">
                             <i class="fas fa-plus mr-2"></i> Tambah Data
                         </a>
@@ -156,7 +154,7 @@
             @empty
                 <div class="text-center py-5 px-4">
                     <div class="mb-3">
-                        <i class="fas fa-inbox fa-3x text-muted"></i>
+                        <i class="fas fa-user-secret fa-3x text-muted"></i>
                     </div>
                     @if(request('search'))
                         <h5 class="text-gray-600 mb-1">Tidak Ada Hasil</h5>

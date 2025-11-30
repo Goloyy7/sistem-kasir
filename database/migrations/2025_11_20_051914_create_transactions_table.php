@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained(); // Kasir
-            $table->string('invoice_code');
+            $table->string('invoice_code')->nullable()->unique();
             $table->integer('total_price');
             $table->integer('pay_amount');
             $table->integer('change_amount'); // Kembalian
+            $table->enum('payment_method', ['cash', 'debit', 'credit', 'ewallet'])->default('cash');
             $table->timestamps();
         });
     }

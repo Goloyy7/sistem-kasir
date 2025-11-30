@@ -23,9 +23,9 @@
 
     <!-- Kasir Table Card -->
     <div class="card shadow border-0">
-        <div class="card-header bg-white py-4 border-bottom-subtle">
+        <div class="card-header bg-white py-3 border-bottom-subtle">
             <div class="row align-items-center">
-                <div class="col-lg-12">
+                <div class="col-lg-8">
                     <h6 class="m-0 font-weight-bold text-primary">
                         <i class="fas fa-users mr-2"></i>Daftar Kasir Terdaftar
                     </h6>
@@ -33,41 +33,82 @@
                         Total: <strong>{{ $kasirs->total() }}</strong> kasir
                     </small>
                 </div>
+                <div class="col-lg-4 d-flex justify-content-lg-end mt-3 mt-lg-0">
+                    <a href="{{ route('kasir-management.create') }}" class="btn btn-success btn-sm">
+                        <i class="fas fa-plus mr-2"></i> Tambah Data
+                    </a>
+                </div>
             </div>
         </div>
 
-        <!-- Search Box -->
-        <div class="card-body border-bottom">
+        <!-- Search & Filter Section -->
+        <div class="card-body border-bottom py-3">
             <form action="{{ route('kasir-management.index') }}" method="GET">
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text bg-white border-right-0">
-                                    <i class="fas fa-search text-muted"></i>
-                                </span>
-                            </div>
-                            <input type="text" name="search" class="form-control border-left-0 pl-0" 
-                                   placeholder="Cari berdasarkan nama atau email..." 
-                                   value="{{ request('search') }}">
-                        </div>
+                <div class="row g-2 align-items-end">
+                    {{-- Search Box --}}
+                    <div class="col-lg-6">
+                        <label for="search" class="form-label small text-muted mb-1">
+                            <i class="fas fa-search mr-1"></i>Nama / Email
+                        </label>
+                        <input type="text"
+                            name="search"
+                            id="search"
+                            class="form-control form-control-sm"
+                            placeholder="Cari nama atau email..."
+                            value="{{ request('search') }}">
                     </div>
-                    <div class="col-md-4 mt-2 mt-md-0">
-                        <button type="submit" class="btn btn-primary btn-sm mr-2">
-                            <i class="fas fa-search mr-1"></i> Cari
-                        </button>
-                        @if(request('search'))
-                            <a href="{{ route('kasir-management.index') }}" class="btn btn-secondary btn-sm">
-                                <i class="fas fa-redo mr-1"></i> Reset
+
+                    {{-- Filter Status --}}
+                    <div class="col-lg-3">
+                        <label for="is_active" class="form-label small text-muted mb-1">
+                            <i class="fas fa-check-circle mr-1"></i>Status
+                        </label>
+                        <select name="is_active" id="is_active" class="form-control form-control-sm">
+                            <option value="">Semua</option>
+                            <option value="1" {{ request('is_active') === '1' ? 'selected' : '' }}>Aktif</option>
+                            <option value="0" {{ request('is_active') === '0' ? 'selected' : '' }}>Tidak Aktif</option>
+                        </select>
+                    </div>
+
+                    {{-- Tombol Action --}}
+                    <div class="col-lg-3 d-flex gap-2">
+                        @if(request()->hasAny(['search','is_active']))
+                            <a href="{{ route('kasir-management.index') }}"
+                               class="btn btn-sm btn-outline-secondary flex-grow-1"
+                               title="Reset filter">
+                                <i class="fas fa-undo"></i>
                             </a>
                         @endif
-                        <a href="{{ route('kasir-management.create') }}" class="btn btn-success btn-sm shadow-sm float-right">
-                            <i class="fas fa-plus mr-2"></i> Tambah Data
-                        </a>
+                        <button type="submit" class="btn btn-sm btn-primary flex-grow-1">
+                            <i class="fas fa-search mr-1"></i>Filter
+                        </button>
                     </div>
                 </div>
+
+                {{-- Active Filter Badges --}}
+                @if(request()->hasAny(['search','is_active']))
+                    <div class="mt-3 d-flex flex-wrap gap-2">
+                        @if(request('search'))
+                            <span class="badge badge-primary">
+                                <i class="fas fa-search mr-1"></i> "{{ request('search') }}"
+                                <a href="{{ route('kasir-management.index', ['is_active' => request('is_active')]) }}" 
+                                   class="text-white ml-2" style="text-decoration: none; cursor: pointer;">×</a>
+                            </span>
+                        @endif
+                        
+                        @if(request('is_active'))
+                            <span class="badge badge-info">
+                                <i class="fas fa-check-circle mr-1"></i> {{ request('is_active') === '1' ? 'Aktif' : 'Tidak Aktif' }}
+                                <a href="{{ route('kasir-management.index', ['search' => request('search')]) }}" 
+                                   class="text-white ml-2" style="text-decoration: none; cursor: pointer;">×</a>
+                            </span>
+                        @endif
+                    </div>
+                @endif
             </form>
         </div>
+
+
 
         <div class="card-body p-0">
             @forelse ($kasirs as $kasir)
@@ -118,12 +159,16 @@
                                         @if($kasir->foto && file_exists(public_path('storage/' . $kasir->foto)))
                                             <img src="{{ asset('storage/' . $kasir->foto) }}"
                                                 alt="{{ $kasir->name }}"
-                                                class="img-thumbnail"
-                                                style="width: 40px; height: 40px; object-fit: cover;">
+                                                class="rounded foto-preview"
+                                                style="width: 40px; height: 40px; object-fit: cover; cursor: pointer;"
+                                                data-toggle="modal" 
+                                                data-target="#fotoModal" 
+                                                data-foto="{{ asset('storage/' . $kasir->foto) }}" 
+                                                data-nama="{{ $kasir->name }}">
                                         @else
-                                            <div class="bg-light d-inline-flex align-items-center justify-content-center"
-                                                style="width: 40px; height: 40px; border: 1px solid #dee2e6; border-radius: 4px;">
-                                                <i class="fas fa-user text-muted" style="font-size: 0.875rem;"></i>
+                                            <div class="bg-secondary d-inline-flex align-items-center justify-content-center" 
+                                                style="width: 40px; height: 40px; border-radius: 4px;">
+                                                <i class="fas fa-user text-white" style="font-size: 0.875rem;"></i>
                                             </div>
                                         @endif
                                     </td>
@@ -174,6 +219,11 @@
                                     {{-- Aksi --}}
                                     <td class="py-2 px-3 text-center align-middle">
                                         <div class="d-flex gap-2 justify-content-center">
+                                            <a href="{{ route('kasir-management.show', $kasir->id) }}"
+                                            class="btn btn-sm p-2 text-info text-decoration-none"
+                                            title="Lihat Detail">
+                                                <i class="fas fa-search"></i>
+                                            </a>
                                             <a href="{{ route('kasir-management.edit', $kasir->id) }}"
                                             class="btn btn-sm p-2 text-primary text-decoration-none"
                                             title="Edit">
@@ -201,8 +251,24 @@
                     </div>
                 @endif
             @empty
-                {{-- bagian kosongmu yang lama biarkan saja seperti sebelumnya --}}
-                {{-- ... --}}
+                <div class="text-center py-5 px-4">
+                    <div class="mb-3">
+                        <i class="fas fa-user-tie fa-3x text-muted"></i>
+                    </div>
+                    @if(request('search'))
+                        <h5 class="text-gray-600 mb-1">Tidak Ada Hasil</h5>
+                        <p class="text-muted mb-3">Tidak ditemukan kasir dengan kata kunci "{{ request('search') }}"</p>
+                        <a href="{{ route('kasir-management.index') }}" class="btn btn-sm btn-secondary">
+                            <i class="fas fa-redo mr-1"></i> Kembali ke Semua Kasir
+                        </a>
+                    @else
+                        <h5 class="text-gray-600 mb-1">Belum Ada Data Kasir</h5>
+                        <p class="text-muted mb-3">Mulai tambahkan kasir baru untuk mengelola sistem kasir Anda.</p>
+                        <a href="{{ route('kasir-management.create') }}" class="btn btn-sm btn-success">
+                            <i class="fas fa-plus mr-1"></i> Tambah Kasir Pertama
+                        </a>
+                    @endif
+                </div>
             @endforelse
         </div>
 
@@ -325,6 +391,8 @@
         </div>
     </div>
 
+    
+
     <script>
         // Handle foto preview modal
         const fotoElements = document.querySelectorAll('.foto-preview');
@@ -336,80 +404,5 @@
                 document.getElementById('modalNamaKasir').textContent = 'Foto: ' + nama;
             });
         });
-
-        // Handle toggle status
-        const toggleStatusButtons = document.querySelectorAll('.toggle-status');
-        toggleStatusButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const kasirId = this.getAttribute('data-id');
-                const currentStatus = parseInt(this.getAttribute('data-status'));
-                const newStatus = currentStatus === 1 ? 0 : 1;
-                
-                if (confirm('Ubah status kasir ini?')) {
-                    fetch(`/admin/kasir-management/${kasirId}/toggle-status`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ is_active: newStatus })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // Update button appearance
-                            const badge = this.querySelector('.badge');
-                            if (newStatus === 1) {
-                                badge.textContent = 'Aktif';
-                                badge.classList.remove('badge-danger');
-                                badge.classList.add('badge-success');
-                            } else {
-                                badge.textContent = 'Nonaktif';
-                                badge.classList.remove('badge-success');
-                                badge.classList.add('badge-danger');
-                            }
-                            this.setAttribute('data-status', newStatus);
-                            
-                            // Show success message
-                            showAlert('Status berhasil diubah!', 'success');
-                        } else {
-                            showAlert('Gagal mengubah status!', 'danger');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        showAlert('Terjadi kesalahan!', 'danger');
-                    });
-                }
-            });
-        });
-
-        // Helper function to show alert
-        function showAlert(message, type) {
-            const alertHtml = `
-                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} mr-2"></i>
-                        <span>${message}</span>
-                    </div>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            `;
-            
-            const alertContainer = document.querySelector('.card-header').parentElement;
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = alertHtml;
-            alertContainer.insertBefore(tempDiv.firstElementChild, alertContainer.firstChild);
-            
-            // Auto-dismiss after 3 seconds
-            setTimeout(() => {
-                const alert = alertContainer.querySelector('.alert');
-                if (alert) {
-                    alert.remove();
-                }
-            }, 3000);
-        }
     </script>
 @endsection

@@ -30,32 +30,43 @@
                             @endif
                         </div>
                         <div class="col-md-7">
-                            <div class="mb-3">
-                                <label class="font-weight-bold text-primary mb-1">Nama Produk</label>
-                                <p class="text-gray-900 mb-0">{{ $product->name }}</p>
-                            </div>
+                            <div class="row">
+                                <!-- Kolom 1: Nama, Kategori, Stok, Harga -->
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="font-weight-bold text-primary mb-1">Nama Produk</label>
+                                        <p class="text-gray-900 mb-0">{{ $product->name }}</p>
+                                    </div>
 
-                            <div class="mb-3">
-                                <label class="font-weight-bold text-primary mb-1">Kategori</label>
-                                <p class="mb-0">
-                                    <span class="badge badge-info">{{ $product->category->name }}</span>
-                                </p>
-                            </div>
+                                    <div class="mb-3">
+                                        <label class="font-weight-bold text-primary mb-1">Kategori</label>
+                                        <p class="mb-0">
+                                            <span class="badge badge-info">{{ $product->category->name }}</span>
+                                        </p>
+                                    </div>
 
-                            <div class="mb-3">
-                                <label class="font-weight-bold text-primary mb-1">Harga</label>
-                                <p class="text-gray-900 mb-0 font-weight-bold text-success">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
-                            </div>
+                                    
+                                    
+                                </div>
 
-                            <div class="mb-0">
-                                <label class="font-weight-bold text-primary mb-1">Stok</label>
-                                <p class="mb-0">
-                                    @if($product->stock > 0)
-                                        <span class="badge badge-success">{{ $product->stock }} unit</span>
-                                    @else
-                                        <span class="badge badge-danger">Habis</span>
-                                    @endif
-                                </p>
+                                <!-- Kolom 2: Diskon, Harga Setelah Diskon -->
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="font-weight-bold text-primary mb-1">Harga</label>
+                                        <p class="text-gray-900 mb-0 font-weight-bold text-success">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="font-weight-bold text-primary mb-1">Stok</label>
+                                        <p class="mb-3">
+                                            @if($product->stock > 0)
+                                            <span class="badge badge-success">{{ $product->stock }} unit</span>
+                                            @else
+                                            <span class="badge badge-danger">Habis</span>
+                                            @endif
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -121,7 +132,7 @@
                             <strong>ID:</strong> {{ $product->id }}
                         </p>
                         <p class="mb-2">
-                            <strong>Kode Barang ID:</strong> {{ $product->category_id }}
+                            <strong>Kode Barang ID:</strong> {{ $product->kode_barang }}
                         </p>
                         <p class="mb-0">
                             <strong>Status Stok:</strong> 

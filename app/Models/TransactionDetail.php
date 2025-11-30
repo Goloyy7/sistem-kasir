@@ -13,10 +13,19 @@ class TransactionDetail extends Model
         'transaction_id',
         'product_id',
         'quantity',
-        'subtotal'
+        'subtotal',
+        'price'
     ];
+
+    
+    
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class);
     }
 }

@@ -9,17 +9,7 @@ use Carbon\Carbon;
 
 class CategoryController extends Controller
 {
-    /**
-     * Convert timestamp to WIB (Waktu Indonesia Barat)
-     * 
-     * @param Carbon $dateTime
-     * @return Carbon
-     */
-    private function convertToWIB($dateTime)
-    {
-        return $dateTime->setTimezone('Asia/Jakarta');
-    }
-
+    
     public function index(Request $request)
     {
         // Kode biar bisa searching
@@ -31,12 +21,6 @@ class CategoryController extends Controller
             })
             ->orderByRaw('COALESCE(updated_at, created_at) DESC')
             ->paginate(10);
-        
-        // Ngubah timezone lewat function tadi
-        $categories->each(function ($category) {
-            $category->created_at = $this->convertToWIB($category->created_at);
-            $category->updated_at = $this->convertToWIB($category->updated_at);
-        });
         
         return view('categories.index', compact('categories'));
     }   

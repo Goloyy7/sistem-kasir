@@ -34,9 +34,9 @@
 
     <!-- Products Table Card -->
     <div class="card shadow border-0">
-        <div class="card-header bg-white py-4 border-bottom-subtle">
+        <div class="card-header bg-white py-3 border-bottom-subtle">
             <div class="row align-items-center">
-                <div class="col-lg-6">
+                <div class="col-lg-8">
                     <h6 class="m-0 font-weight-bold text-primary">
                         <i class="fas fa-box mr-2"></i>Daftar Produk Terdaftar
                     </h6>
@@ -44,8 +44,8 @@
                         Total: <strong>{{ $products->total() }}</strong> produk
                     </small>
                 </div>
-                <div class="col-lg-6 text-right">
-                    <a href="{{ route('products.create') }}" class="btn btn-success btn-sm shadow-sm">
+                <div class="col-lg-4 d-flex justify-content-lg-end mt-3 mt-lg-0">
+                    <a href="{{ route('products.create') }}" class="btn btn-success btn-sm">
                         <i class="fas fa-plus mr-2"></i> Tambah Data
                     </a>
                 </div>
@@ -53,99 +53,96 @@
         </div>
 
         <!-- Search & Filter Section -->
-        <div class="card-body border-bottom bg-light">
-            <div class="row align-items-end">
-                <!-- Search Box -->
-                <div class="col-md-6">
-                    <form action="{{ route('products.index') }}" method="GET" id="searchForm">
-                        <input type="hidden" name="category_id" value="{{ request('category_id') }}">
-                        <input type="hidden" name="stock_filter" value="{{ request('stock_filter') }}">
-                        
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text bg-white">
-                                    <i class="fas fa-search text-muted"></i>
-                                </span>
-                            </div>
-                            <input type="text" name="search" class="form-control" 
-                                   placeholder="Cari kode atau nama produk..." 
-                                   value="{{ request('search') }}">
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                                @if(request('search'))
-                                    <a href="{{ route('products.index', ['category_id' => request('category_id'), 'stock_filter' => request('stock_filter')]) }}" 
-                                       class="btn btn-secondary">
-                                        <i class="fas fa-times"></i>
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
-                    </form>
-                </div>
+        <div class="card-body border-bottom py-3">
+            <form action="{{ route('products.index') }}" method="GET">
+                <div class="row g-2 align-items-end">
+                    {{-- Search Box --}}
+                    <div class="col-lg-4">
+                        <label for="search" class="form-label small text-muted mb-1">
+                            <i class="fas fa-search mr-1"></i>Kode / Nama Produk
+                        </label>
+                        <input type="text"
+                            name="search"
+                            id="search"
+                            class="form-control form-control-sm"
+                            placeholder="Cari kode atau nama..."
+                            value="{{ request('search') }}">
+                    </div>
 
-                <!-- Filters -->
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <select name="category_filter" id="categoryFilter" class="form-control form-control-sm">
-                                <option value="">Semua Kategori</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                                        {{ $category->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <select name="stock_filter" id="stockFilter" class="form-control form-control-sm">
-                                <option value="">Semua Stok</option>
-                                <option value="available" {{ request('stock_filter') === 'available' ? 'selected' : '' }}>
-                                    ✅ Tersedia
+                    {{-- Filter Kategori --}}
+                    <div class="col-lg-3">
+                        <label for="category_id" class="form-label small text-muted mb-1">
+                            <i class="fas fa-tag mr-1"></i>Kategori
+                        </label>
+                        <select name="category_id" id="category_id" class="form-control form-control-sm">
+                            <option value="">Semua</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }}
                                 </option>
-                                <option value="habis" {{ request('stock_filter') === 'habis' ? 'selected' : '' }}>
-                                    ❌ Habis
-                                </option>
-                            </select>
-                        </div>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Filter Stok --}}
+                    <div class="col-lg-2">
+                        <label for="stock_filter" class="form-label small text-muted mb-1">
+                            <i class="fas fa-box mr-1"></i>Stok
+                        </label>
+                        <select name="stock_filter" id="stock_filter" class="form-control form-control-sm">
+                            <option value="">Semua</option>
+                            <option value="available" {{ request('stock_filter') === 'available' ? 'selected' : '' }}>Tersedia</option>
+                            <option value="habis" {{ request('stock_filter') === 'habis' ? 'selected' : '' }}>Habis</option>
+                        </select>
+                    </div>
+
+                    {{-- Tombol Action --}}
+                    <div class="col-lg-3 d-flex gap-2">
+                        @if(request()->hasAny(['search','category_id','stock_filter']))
+                            <a href="{{ route('products.index') }}"
+                               class="btn btn-sm btn-outline-secondary flex-grow-1"
+                               title="Reset filter">
+                                <i class="fas fa-undo"></i>
+                            </a>
+                        @endif
+                        <button type="submit" class="btn btn-sm btn-primary flex-grow-1">
+                            <i class="fas fa-search mr-1"></i>Filter
+                        </button>
                     </div>
                 </div>
-            </div>
 
-            <!-- Active Filters Badge -->
-            @if(request('category_id') || request('stock_filter') || request('search'))
-                <div class="mt-3">
-                    <small class="text-muted">Filter aktif:</small>
-                    @if(request('search'))
-                        <span class="badge badge-primary ml-1">
-                            <i class="fas fa-search mr-1"></i> "{{ request('search') }}"
-                            <a href="{{ route('products.index', ['category_id' => request('category_id'), 'stock_filter' => request('stock_filter')]) }}" 
-                               class="text-white ml-1" style="text-decoration: none;">×</a>
-                        </span>
-                    @endif
-                    @if(request('category_id'))
-                        @php
-                            $selectedCategory = $categories->firstWhere('id', request('category_id'));
-                        @endphp
-                        <span class="badge badge-info ml-1">
-                            <i class="fas fa-tag mr-1"></i> {{ $selectedCategory->name }}
-                            <a href="{{ route('products.index', ['search' => request('search'), 'stock_filter' => request('stock_filter')]) }}" 
-                               class="text-white ml-1" style="text-decoration: none;">×</a>
-                        </span>
-                    @endif
-                    @if(request('stock_filter'))
-                        <span class="badge badge-warning ml-1">
-                            <i class="fas fa-box mr-1"></i> {{ request('stock_filter') === 'available' ? 'Tersedia' : 'Habis' }}
-                            <a href="{{ route('products.index', ['search' => request('search'), 'category_id' => request('category_id')]) }}" 
-                               class="text-white ml-1" style="text-decoration: none;">×</a>
-                        </span>
-                    @endif
-                    <a href="{{ route('products.index') }}" class="btn btn-sm btn-outline-secondary ml-2">
-                        <i class="fas fa-redo mr-1"></i> Reset Semua
-                    </a>
-                </div>
-            @endif
+                {{-- Active Filter Badges --}}
+                @if(request()->hasAny(['search','category_id','stock_filter']))
+                    <div class="mt-3 d-flex flex-wrap gap-2">
+                        @if(request('search'))
+                            <span class="badge badge-primary">
+                                <i class="fas fa-search mr-1"></i> "{{ request('search') }}"
+                                <a href="{{ route('products.index', ['category_id' => request('category_id'), 'stock_filter' => request('stock_filter')]) }}" 
+                                   class="text-white ml-2" style="text-decoration: none; cursor: pointer;">×</a>
+                            </span>
+                        @endif
+                        
+                        @if(request('category_id'))
+                            @php
+                                $selectedCategory = $categories->firstWhere('id', request('category_id'));
+                            @endphp
+                            <span class="badge badge-info">
+                                <i class="fas fa-tag mr-1"></i> {{ $selectedCategory->name ?? 'Unknown' }}
+                                <a href="{{ route('products.index', ['search' => request('search'), 'stock_filter' => request('stock_filter')]) }}" 
+                                   class="text-white ml-2" style="text-decoration: none; cursor: pointer;">×</a>
+                            </span>
+                        @endif
+
+                        @if(request('stock_filter'))
+                            <span class="badge badge-warning">
+                                <i class="fas fa-box mr-1"></i> {{ request('stock_filter') === 'available' ? 'Tersedia' : 'Habis' }}
+                                <a href="{{ route('products.index', ['search' => request('search'), 'category_id' => request('category_id')]) }}" 
+                                   class="text-white ml-2" style="text-decoration: none; cursor: pointer;">×</a>
+                            </span>
+                        @endif
+                    </div>
+                @endif
+            </form>
         </div>
 
         <div class="card-body p-0">
@@ -194,7 +191,7 @@
                                         @if($product->image && file_exists(public_path('storage/' . $product->image)))
                                             <img src="{{ asset('storage/' . $product->image) }}"
                                                 alt="{{ $product->name }}"
-                                                class="img-thumbnail product-image"
+                                                class="rounded product-image"
                                                 style="width: 40px; height: 40px; object-fit: cover; cursor: pointer;"
                                                 data-toggle="modal"
                                                 data-target="#imageModal"
@@ -242,8 +239,8 @@
                                             {{ $product->created_at->format('H:i') }}
                                         </small>
                                     </td>
-                                    <td class="py-2 px-3 text-center align-middle">
-                                        <div class="d-flex gap-2 justify-content-center">
+                                    <td class="py-2 px-2 text-center align-middle">
+                                        <div class="d-flex gap-2 justify-content-center flex-wrap">
                                             <a href="{{ route('products.show', $product->id) }}"
                                             class="btn btn-sm p-2 text-info text-decoration-none"
                                             title="Lihat Detail">
@@ -277,8 +274,22 @@
                 @endif
             @empty
                 <div class="text-center py-5 px-4">
-                    {{-- blok kosong tetap sama --}}
-                    ...
+                    <div class="mb-3">
+                        <i class="fas fa-box-open fa-3x text-muted"></i>
+                    </div>
+                    @if(request('search') || request('category_id') || request('stock_filter'))
+                        <h5 class="text-gray-600 mb-1">Tidak Ada Hasil</h5>
+                        <p class="text-muted mb-3">Tidak ditemukan produk dengan kriteria pencarian Anda.</p>
+                        <a href="{{ route('products.index') }}" class="btn btn-sm btn-secondary">
+                            <i class="fas fa-redo mr-1"></i> Kembali ke Semua Produk
+                        </a>
+                    @else
+                        <h5 class="text-gray-600 mb-1">Belum Ada Data Produk</h5>
+                        <p class="text-muted mb-3">Mulai tambahkan produk baru untuk sistem kasir Anda.</p>
+                        <a href="{{ route('products.create') }}" class="btn btn-sm btn-success">
+                            <i class="fas fa-plus mr-1"></i> Tambah Produk Pertama
+                        </a>
+                    @endif
                 </div>
             @endforelse
         </div>
@@ -424,28 +435,6 @@
                 document.getElementById('modalImageImg').src = imageSrc;
                 document.getElementById('modalNamaProduct').textContent = 'Produk: ' + nama;
             });
-        });
-
-        // Auto-submit on category filter change
-        document.getElementById('categoryFilter').addEventListener('change', function() {
-            const url = new URL(window.location.href);
-            if (this.value) {
-                url.searchParams.set('category_id', this.value);
-            } else {
-                url.searchParams.delete('category_id');
-            }
-            window.location.href = url.toString();
-        });
-
-        // Auto-submit on stock filter change
-        document.getElementById('stockFilter').addEventListener('change', function() {
-            const url = new URL(window.location.href);
-            if (this.value) {
-                url.searchParams.set('stock_filter', this.value);
-            } else {
-                url.searchParams.delete('stock_filter');
-            }
-            window.location.href = url.toString();
         });
     </script>
 @endsection

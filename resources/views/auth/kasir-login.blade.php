@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Login Admin - Sistem Kasir</title>
+    <title>Login Kasir - Sistem Kasir</title>
 
     <!-- Custom fonts for this template-->
     <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
@@ -36,9 +36,9 @@
                                 <div class="p-5">
                                     <div class="text-center mb-4">
                                         <div class="mb-3">
-                                            <i class="fas fa-user-shield fa-3x text-primary"></i>
+                                            <i class="fas fa-cash-register fa-3x text-primary"></i>
                                         </div>
-                                        <h1 class="h4 text-gray-900 mb-2">Admin Login</h1>
+                                        <h1 class="h4 text-gray-900 mb-2">Login Kasir</h1>
                                         <p class="text-gray-600 small">Masuk ke Sistem Kasir</p>
                                     </div>
 
@@ -75,7 +75,7 @@
                                         </div>
                                     @endif
 
-                                    <form class="user" method="POST" action="{{ route('loginAdmin') }}">
+                                    <form class="user" method="POST" action="{{ route('loginKasir') }}">
                                         @csrf
                                         
                                         <div class="form-group">
@@ -106,17 +106,6 @@
                                                 <small class="text-danger ml-3">{{ $message }}</small>
                                             @enderror
                                         </div>
-
-                                        <!-- <div class="form-group">
-                                            <div class="custom-control custom-checkbox small">
-                                                <input type="checkbox" 
-                                                       class="custom-control-input" 
-                                                       id="remember" 
-                                                       name="remember" 
-                                                       {{ old('remember') ? 'checked' : '' }}>
-                                                <label class="custom-control-label" for="remember">Ingat Saya</label>
-                                            </div>
-                                        </div> -->
 
                                         <button type="submit" class="btn btn-primary btn-user btn-block">
                                             <i class="fas fa-sign-in-alt mr-2"></i>Login

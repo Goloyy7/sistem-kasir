@@ -6,22 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
-    /**
-     * Convert timestamp to WIB (Waktu Indonesia Barat)
-     * 
-     * @param Carbon $dateTime
-     * @return Carbon
-     */
-    private function convertToWIB($dateTime) // function buat ngubah timezone ke WIB
-    {
-        return $dateTime->setTimezone('Asia/Jakarta');
-    }
-
+    
     public function index(Request $request)
     {
         // Kode biar bisa searching
@@ -34,12 +23,6 @@ class AdminController extends Controller
             })
             ->orderByRaw('COALESCE(updated_at, created_at) DESC')
             ->paginate(10);
-        
-        // Ngubah timezone lewat function tadi
-        $admins->each(function ($admin) {
-            $admin->created_at = $this->convertToWIB($admin->created_at);
-            $admin->updated_at = $this->convertToWIB($admin->updated_at);
-        });
         
         return view('admin-management.index', compact('admins'));
     }   
