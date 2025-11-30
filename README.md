@@ -101,19 +101,11 @@ Konsep utama:
 
 - Email : `kasir@sistem.com`  
 - Password : `password`  
-- Pastikan kolom `is_active = 1` agar kasir bisa login dan melakukan transaksi.
 
 ---
 
 ## 4. ERD (Entity Relationship Diagram)
-
-> Gambar ERD dapat dimasukkan di folder `docs/` atau sesuai kebutuhan.
-
-Contoh format penyisipan gambar:
-
-```markdown
-![ERD Sistem POS](docs/erd-pos.png)
-```
+![ERD Sistem POS](docs/erd.png)
 
 ---
 
