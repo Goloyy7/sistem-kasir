@@ -166,6 +166,7 @@ Konsep utama:
 ```bash
 git clone https://github.com/Goloyy7/sistem-kasir.git
 cd sistem-kasir
+code .
 ```
 2. Instal Dependency PHP
 ```bash
