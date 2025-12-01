@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Carbon\Carbon;
 
 class KasirManagement extends Controller
 {
@@ -53,7 +52,7 @@ class KasirManagement extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'phone_number' => 'required|string|regex:/^[0-9]{10,13}$/|unique:users,phone_number',
+            'phone_number' => 'required|string|regex:/^08[0-9]{8,11}$/|unique:users,phone_number',
             'address' => 'required|string|max:500',
             'password' => 'required|string|min:8',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -64,7 +63,7 @@ class KasirManagement extends Controller
             'email.email' => 'Format email tidak valid',
             'email.unique' => 'Email sudah terdaftar',
             'phone_number.required' => 'Nomor telepon harus diisi',
-            'phone_number.regex' => 'Nomor telepon harus 10-13 digit',
+            'phone_number.regex' => 'Nomor telepon harus diawali 08 dan 10-13 digit',
             'phone_number.unique' => 'Nomor telepon sudah terdaftar',
             'address.required' => 'Alamat harus diisi',
             'password.required' => 'Password harus diisi',
@@ -109,7 +108,7 @@ class KasirManagement extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
-            'phone_number' => 'required|string|regex:/^[0-9]{10,13}$/|unique:users,phone_number,' . $user->id,
+            'phone_number' => 'required|string|regex:/^08[0-9]{8,11}$/|unique:users,phone_number,' . $user->id,
             'address' => 'required|string|max:500',
             'password' => 'nullable|string|min:8',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -120,7 +119,7 @@ class KasirManagement extends Controller
             'email.email' => 'Format email tidak valid',
             'email.unique' => 'Email sudah terdaftar',
             'phone_number.required' => 'Nomor telepon harus diisi',
-            'phone_number.regex' => 'Nomor telepon harus 10-13 digit',
+            'phone_number.regex' => 'Nomor telepon harus diawali 08 dan 10-13 digit',
             'phone_number.unique' => 'Nomor telepon sudah terdaftar',
             'address.required' => 'Alamat harus diisi',
             'password.min' => 'Password minimal 8 karakter',

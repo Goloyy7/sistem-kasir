@@ -153,15 +153,22 @@ Konsep utama:
 
 ---
 
-## 6. Prasyarat Clone
+## 6. Teknologi yang digunakan
+- Laravel 12
 
+## 7. Tools yang digunakan
+- Laragon
+- VSCode
+- Navicat
+
+## 8. Persyaratan clone / instalasi
 - PHP 8.1+
 - Web Server (Apache, Nginx, atau bawaan php artisan serve)
 - Database (MySQL / MariaDB)
 - Composer
 - Web Browser (Chrome, Firefox, Edge, dll)
 
-## 7. Instalasi Project
+## 9. Instalasi Project
 1. Clone Repository
 ```bash
 git clone https://github.com/Goloyy7/sistem-kasir.git
@@ -206,7 +213,7 @@ php artisan serve
 - Login Admin : `http:127.0.0.1:8000/admin/login`
 - Login Kasir : `http:127.0.0.1:8000/kasir/login`
 
-## 8. Pembuat
+## 10. Pembuat
 Proyek **Sistem Kasir Point Of Sale (POS)** ini dibuat oleh:
 - **Nama** : Indra Goldy Suwandi
 - **Jurusan** : Pengembangan Perangkat Lunak dan Gim (PPLG)

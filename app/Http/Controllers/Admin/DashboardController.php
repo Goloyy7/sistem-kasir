@@ -10,29 +10,28 @@ use App\Models\Product;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
     //
     public function index()
     {
-        // Count data
+        // Hitung Total Data
         $totalAdmin = Admin::count();
         $totalKasir = User::count();
         $totalCategory = Category::count();
         $totalProduct = Product::count();
         
-        // Transaction statistics
+        // Statistik Transaksi dan Pendapatan
         $totalTransactionAllTime = Transaction::count();
         $totalRevenueAllTime = Transaction::sum('total_price');
         
         $transactionToday = Transaction::whereDate('created_at', today())->count();
         $revenueToday = Transaction::whereDate('created_at', today())->sum('total_price');
         
-        // Last 7 days transaction data for chart
+        // Data transaksi dan pendapatan 7 hari terakhir
         $last7DaysData = [];
-        for ($i = 6; $i >= 0; $i--) {
+        for ($i = 6; $i >= 0; $i--) { // $i = 6, jika $i = 0 atau lebih dari 0 maka dikurangi 1 (hari)
             $date = Carbon::now()->subDays($i);
             $count = Transaction::whereDate('created_at', $date)->count();
             $revenue = Transaction::whereDate('created_at', $date)->sum('total_price');
@@ -44,12 +43,12 @@ class DashboardController extends Controller
             ];
         }
         
-        // Payment method statistics
-        $paymentMethodStats = Transaction::selectRaw('payment_method, COUNT(*) as total, SUM(total_price) as revenue')
+        // Statistik Payment method
+        $paymentMethodStats = Transaction::selectRaw('payment_method, COUNT(*) as total, SUM(total_price) as revenue') // Memakai selectRaw karena saya butuh mengambil kolom biasa sekaligus kolom hasil perhitungan seperti COUNT(*) dan SUM(...) dalam satu query, Kalau select() biasanya dipakai untuk ambil kolom apa adanya.
             ->groupBy('payment_method')
             ->get();
         
-        // Top products by transaction
+        // Best selling products
         $topProducts = DB::table('transaction_details')
             ->join('products', 'transaction_details.product_id', '=', 'products.id')
             ->selectRaw('products.id, products.name, COUNT(*) as qty_sold, SUM(transaction_details.subtotal) as revenue')
