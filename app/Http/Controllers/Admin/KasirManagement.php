@@ -166,19 +166,4 @@ class KasirManagement extends Controller
         return redirect()->route('kasir-management.index')->with('success', 'Kasir berhasil dihapus!');
     }
 
-    public function toggleStatus(Request $request, $id)
-    {
-        // function untuk langsung mengubah status langsung di index tanpa masuk ke edit
-        $user = User::findOrFail($id);
-        $user->is_active = $request->is_active;
-        $user->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Status berhasil diubah',
-            'is_active' => $user->is_active
-        ]);
-    }
-
-    
 }

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    
+
     public function index(Request $request)
     {
         // Kode biar bisa searching
@@ -40,13 +40,13 @@ class ProductController extends Controller
             })
             ->orderByRaw('COALESCE(updated_at, created_at) DESC')
             ->paginate(10);
-        
+
 
         // Ambil semua kategori untuk filter
         $categories = Category::all();
-        
+
         return view('products.index', compact('products', 'categories'));
-    }   
+    }
 
     public function create()
     {
@@ -144,8 +144,8 @@ class ProductController extends Controller
         // Upload image jika ada
         if ($request->hasFile('image')) {
             // Hapus image lama jika ada
-            if ($product->image && Storage::exists('public/' . $product->image)) {
-                Storage::delete('public/' . $product->image);
+            if ($product->image && Storage::disk('public')->exists($product->image)) {
+                Storage::disk('public')->delete($product->image);
             }
             $validated['image'] = $request->file('image')->store('products', 'public');
         }
@@ -164,8 +164,8 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
 
         // Hapus image jika ada
-        if ($product->image && Storage::exists('public/' . $product->image)) {
-            Storage::delete('public/' . $product->image);
+        if ($product->image && Storage::disk('public')->exists($product->image)) {
+            Storage::disk('public')->delete($product->image);
         }
 
         // Hapus produk
